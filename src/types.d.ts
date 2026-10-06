@@ -95,6 +95,11 @@ export interface ITrack {
   title?: string;
 }
 
+export interface IQueueItem {
+  queueId: string;
+  track: ITrack;
+}
+
 export interface IAlbum {
   id: string;
   poster_path: string; // album cover

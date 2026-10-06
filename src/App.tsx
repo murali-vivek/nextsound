@@ -11,6 +11,10 @@ import {
   DemoModeBadge,
 } from "@/common";
 import { CommandPalette } from "@/components/ui/CommandPalette";
+import { MiniPlayer } from "@/components/ui/MiniPlayer";
+import QueuePanel from "@/components/ui/QueuePanel";
+import { useAudioPlayerContext } from "@/context/audioPlayerContext";
+import { cn } from "@/utils";
 
 import "react-loading-skeleton/dist/skeleton.css";
 import "swiper/css";
@@ -20,6 +24,26 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const {
+    currentTrack,
+    isPlaying,
+    progress,
+    volume,
+    isShuffled,
+    repeatMode,
+    isMinimized,
+    togglePlay,
+    skipNext,
+    skipPrevious,
+    seek,
+    setVolume,
+    toggleShuffle,
+    toggleRepeat,
+    toggleFavorite,
+    toggleMinimize,
+    closePlayer,
+    toggleQueue,
+  } = useAudioPlayerContext();
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -40,7 +64,10 @@ const App = () => {
       <SideBar />
       <Header onOpenSearch={() => setIsCommandPaletteOpen(true)} />
       <DemoModeBadge />
-      <main className="transition-all duration-300 lg:pb-14 md:pb-4 sm:pb-2 xs:pb-1 pb-0 bg-white dark:bg-deep-dark min-h-screen">
+      <main className={cn(
+        "transition-all duration-300 bg-white dark:bg-deep-dark min-h-screen",
+        currentTrack && !isMinimized ? "pb-24" : "lg:pb-14 md:pb-4 sm:pb-2 xs:pb-1 pb-0"
+      )}>
         <ScrollToTop>
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>
@@ -61,6 +88,31 @@ const App = () => {
           // Item selection handled by CommandPalette component
         }}
       />
+
+      <QueuePanel />
+
+      {currentTrack && (
+        <MiniPlayer
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+          progress={progress}
+          volume={volume}
+          isShuffled={isShuffled}
+          repeatMode={repeatMode}
+          isMinimized={isMinimized}
+          onTogglePlay={togglePlay}
+          onSkipPrevious={skipPrevious}
+          onSkipNext={skipNext}
+          onSeek={seek}
+          onVolumeChange={setVolume}
+          onToggleShuffle={toggleShuffle}
+          onToggleRepeat={toggleRepeat}
+          onToggleFavorite={toggleFavorite}
+          onToggleMinimize={toggleMinimize}
+          onClose={closePlayer}
+          onToggleQueue={toggleQueue}
+        />
+      )}
 
       <Footer />
     </>

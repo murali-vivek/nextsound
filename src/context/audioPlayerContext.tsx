@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
-import { ITrack } from '@/types';
+import { IQueueItem, ITrack } from '@/types';
 
 interface AudioPlayerContextType {
   currentTrack: ITrack | null;
@@ -10,7 +10,9 @@ interface AudioPlayerContextType {
   isShuffled: boolean;
   repeatMode: 'off' | 'one' | 'all';
   isMinimized: boolean;
-  playTrack: (track: ITrack) => void;
+  queue: IQueueItem[];
+  isQueueOpen: boolean;
+  playTrack: (track: ITrack, forceRestart?: boolean) => void;
   togglePlay: () => void;
   skipNext: () => void;
   skipPrevious: () => void;
@@ -21,6 +23,15 @@ interface AudioPlayerContextType {
   toggleFavorite: () => void;
   toggleMinimize: () => void;
   closePlayer: () => void;
+  addToQueue: (track: ITrack) => void;
+  removeFromQueue: (queueId: string) => void;
+  reorderQueue: (nextQueue: IQueueItem[]) => void;
+  moveQueueItem: (queueId: string, direction: 'up' | 'down') => void;
+  clearQueue: () => void;
+  openQueue: () => void;
+  closeQueue: () => void;
+  toggleQueue: () => void;
+  playFromQueue: (queueId: string) => void;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -46,4 +57,3 @@ export const useAudioPlayerContext = () => {
   }
   return context;
 };
-

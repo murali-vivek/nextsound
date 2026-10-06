@@ -12,7 +12,8 @@ import {
   FiHeart,
   FiMoreHorizontal,
   FiMinimize2,
-  FiMaximize2
+  FiMaximize2,
+  FiList
 } from 'react-icons/fi';
 import { ITrack } from '@/types';
 import { getImageUrl, cn } from '@/utils';
@@ -33,6 +34,7 @@ interface MiniPlayerProps {
   onToggleRepeat?: () => void;
   onToggleFavorite?: () => void;
   onClose?: () => void;
+  onToggleQueue?: () => void;
   isMinimized?: boolean;
   onToggleMinimize?: () => void;
   className?: string;
@@ -53,8 +55,10 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
   onToggleShuffle,
   onToggleRepeat,
   onToggleFavorite,
+  onClose: _onClose,
   isMinimized = false,
   onToggleMinimize,
+  onToggleQueue,
   className
 }) => {
   const [isMuted, setIsMuted] = useState(false);
@@ -112,7 +116,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
   if (isMinimized) {
     return (
       <div className={cn(
-        "fixed bottom-4 right-4 bg-white dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 p-2 z-50 transition-all duration-300 hover:scale-105",
+        "fixed bottom-4 right-4 bg-white dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 p-2 z-[70] transition-all duration-300 hover:scale-105",
         className
       )}>
         <div className="flex items-center space-x-2">
@@ -130,6 +134,15 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
             {isPlaying ? <FiPause className="w-4 h-4" /> : <FiPlay className="w-4 h-4 ml-0.5" />}
           </Button>
           <Button
+            onClick={onToggleQueue}
+            variant="ghost"
+            size="icon"
+            className="flex items-center justify-center w-6 h-6 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200"
+            aria-label="Open queue"
+          >
+            <FiList className="w-3 h-3" />
+          </Button>
+          <Button
             onClick={onToggleMinimize}
             variant="ghost"
             size="icon"
@@ -144,7 +157,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
 
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 z-40 transition-all duration-300",
+      "fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 z-[70] transition-all duration-300",
       className
     )}>
       {/* Progress bar - full width at top */}
@@ -321,6 +334,16 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({
               </div>
             )}
           </div>
+
+          <Button
+            onClick={onToggleQueue}
+            variant="ghost"
+            size="icon"
+            className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-200"
+            aria-label="Open queue"
+          >
+            <FiList className="w-4 h-4" />
+          </Button>
 
           {/* More options */}
           <Button

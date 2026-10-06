@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { LazyMotion, domAnimation } from "framer-motion";
+import { LazyMotion, domMax } from "framer-motion";
 import { Provider } from "react-redux";
 
 import { store } from "@/store";
+import { AudioPlayerProvider } from "@/context/audioPlayerContext";
 import GlobalContextProvider from "@/context/globalContext";
 import ThemeProvider from "@/context/themeContext";
 import ErrorBoundary from "@/common/ErrorBoundary";
@@ -29,9 +30,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Provider store={store}>
           <ThemeProvider>
             <GlobalContextProvider>
-              <LazyMotion features={domAnimation}>
-                <App />
-              </LazyMotion>
+              <AudioPlayerProvider>
+                <LazyMotion features={domMax}>
+                  <App />
+                </LazyMotion>
+              </AudioPlayerProvider>
             </GlobalContextProvider>
           </ThemeProvider>
         </Provider>

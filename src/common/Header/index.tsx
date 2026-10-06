@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { AiOutlineMenu } from "react-icons/ai";
 import { FiSun } from "react-icons/fi";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiList } from "react-icons/fi";
 import throttle from "lodash.throttle";
 import { Button } from "react-aria-components";
 
@@ -13,6 +13,7 @@ import HeaderNavItem from "./HeaderNavItem";
 
 import { useGlobalContext } from "@/context/globalContext";
 import { useTheme } from "@/context/themeContext";
+import { useAudioPlayerContext } from "@/context/audioPlayerContext";
 import { maxWidth } from "@/styles";
 import { navLinks } from "@/constants";
 import { THROTTLE_DELAY } from "@/utils/config";
@@ -25,6 +26,7 @@ interface HeaderProps {
 const Header = ({ onOpenSearch }: HeaderProps) => {
   const { openMenu, theme, showThemeOptions } = useTheme();
   const { setShowSidebar } = useGlobalContext();
+  const { toggleQueue, queue, isQueueOpen } = useAudioPlayerContext();
 
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isNotFoundPage, setIsNotFoundPage] = useState<boolean>(false);
@@ -120,6 +122,26 @@ const Header = ({ onOpenSearch }: HeaderProps) => {
             </kbd>
           </Button>
 
+          <button
+            type="button"
+            onClick={toggleQueue}
+            aria-label="Open queue"
+            aria-pressed={isQueueOpen}
+            className={cn(
+              "relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-105",
+              isNotFoundPage || isActive
+                ? "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                : "text-gray-300 hover:bg-white/10"
+            )}
+          >
+            <FiList className="w-5 h-5" />
+            {queue.length > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+                {queue.length}
+              </span>
+            )}
+          </button>
+
           <div className="button relative">
             <button
               name="theme-menu"
@@ -141,6 +163,26 @@ const Header = ({ onOpenSearch }: HeaderProps) => {
           </div>
         </div>
 
+        <div className="flex items-center gap-3 md:hidden">
+          <button
+            type="button"
+            onClick={toggleQueue}
+            aria-label="Open queue"
+            aria-pressed={isQueueOpen}
+            className={cn(
+              `relative inline-flex text-[22.75px] transition-all duration-300`,
+              isNotFoundPage || isActive
+                ? `text-black dark:text-white dark:hover:text-gray-300 hover:text-gray-600 `
+                : ` dark:hover:text-sec-color text-sec-color`
+            )}
+          >
+            <FiList />
+            {queue.length > 0 && (
+              <span className="absolute -top-2 -right-2 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-blue-600 text-[9px] font-bold text-white">
+                {queue.length}
+              </span>
+            )}
+          </button>
         <button
           type="button"
           name="menu"
@@ -154,6 +196,7 @@ const Header = ({ onOpenSearch }: HeaderProps) => {
         >
           <AiOutlineMenu />
         </button>
+        </div>
       </nav>
     </header>
   );

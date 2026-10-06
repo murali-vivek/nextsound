@@ -3,6 +3,7 @@ import { Card, CardContent } from './card';
 import {
   FaClock
 } from 'react-icons/fa';
+import { MdPlaylistAdd } from 'react-icons/md';
 import { ITrack } from '@/types';
 import { getImageUrl, cn } from '@/utils';
 
@@ -11,6 +12,7 @@ interface TrackCardProps {
   category: string;
   isPlaying?: boolean;
   onPlay?: (track: ITrack) => void;
+  onAddToQueue?: (track: ITrack) => void;
   variant?: 'compact' | 'detailed' | 'featured';
   className?: string;
 }
@@ -19,7 +21,8 @@ export const TrackCard: React.FC<TrackCardProps> = ({
   track,
   category: _category,
   isPlaying: _isPlayingProp,
-  onPlay: _onPlayProp,
+  onPlay,
+  onAddToQueue,
   variant = 'detailed',
   className
 }) => {
@@ -54,6 +57,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onPlay?.(track)}
     >
       {/* Main Content */}
       <div className="block relative h-full">
@@ -86,6 +90,27 @@ export const TrackCard: React.FC<TrackCardProps> = ({
             "absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-opacity duration-300 rounded-lg",
             isHovered ? "opacity-100" : "opacity-0"
           )} />
+
+          {onAddToQueue && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onAddToQueue(track);
+              }}
+              className={cn(
+                "absolute bottom-2 left-2 right-2 z-10 flex items-center justify-center gap-1.5 rounded-full bg-white/95 px-2 py-1.5 text-[11px] font-semibold text-gray-900 shadow-md transition-all duration-200",
+                "hover:bg-white dark:bg-gray-900/95 dark:text-white dark:hover:bg-gray-800",
+                "sm:opacity-0 sm:group-hover:opacity-100",
+                "opacity-100"
+              )}
+              aria-label={`Add ${displayTitle} to queue`}
+            >
+              <MdPlaylistAdd className="h-4 w-4" />
+              Add to Queue
+            </button>
+          )}
         </div>
 
         {/* Track information */}
